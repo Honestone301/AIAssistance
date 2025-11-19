@@ -30,6 +30,19 @@
         <java.version>17</java.version>
     </properties>
     <dependencies>
+        <!-- 在 dependencies 标签内添加 -->
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-resolver-dns-native-macos</artifactId>
+            <version>4.1.101.Final</version> <!-- 使用与项目中 netty-transport 相同的版本 -->
+            <classifier>osx-aarch_64</classifier> <!-- 如果你使用的是 Apple Silicon 芯片 -->
+            <!-- 如果你使用的是 Intel 芯片，使用 <classifier>osx-x86_64</classifier> -->
+        </dependency>
+        <!-- spring-boot-starter-webflux 已包含 WebClient -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
+        </dependency>
         <!-- https://mvnrepository.com/artifact/com.baomidou/mybatis-plus-boot-starter -->
         <!--		<dependency>-->
         <!--			<groupId>com.baomidou</groupId>-->
@@ -121,17 +134,53 @@
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
 
-        <!-- HTTP客户端依赖 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-webflux</artifactId>
-        </dependency>
+        <!-- Spring Boot Web 已包含 RestTemplate -->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-starter-web</artifactId>-->
+<!--        </dependency>-->
+<!--z-->
 
+<!--        &lt;!&ndash; OkHttp &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>com.squareup.okhttp3</groupId>-->
+<!--            <artifactId>okhttp</artifactId>-->
+<!--            <version>4.12.0</version>-->
+<!--        </dependency>-->
         <!-- JSON处理依赖 -->
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.fasterxml.jackson.core</groupId>-->
+<!--            <artifactId>jackson-databind</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>junit</groupId>-->
+<!--            <artifactId>junit</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-test</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.mockito</groupId>-->
+<!--            <artifactId>mockito-core</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.testng</groupId>-->
+<!--            <artifactId>testng</artifactId>-->
+<!--            <version>RELEASE</version>-->
+<!--            <scope>compile</scope>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.junit.jupiter</groupId>-->
+<!--            <artifactId>junit-jupiter-api</artifactId>-->
+<!--        </dependency>-->
+<!--        &lt;!&ndash; 添加H2数据库依赖用于测试 &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>com.h2database</groupId>-->
+<!--            <artifactId>h2</artifactId>-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
+
     </dependencies>
 
     <build>

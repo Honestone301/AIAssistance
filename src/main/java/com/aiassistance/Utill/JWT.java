@@ -9,16 +9,23 @@ import java.util.Map;
 
 @Component
 public  class JWT {
-    private static final String SECRET_KEY = System.getenv("jwt.secret"); // 密钥
+    private static final String DEFAULT_SECRET_KEY = "your_default_secret_key_change_in_production";
     //  JWT 过期时间 6 小时
     private static final long EXPIRATION_TIME = 1000 * 60 * 60 * 6;
+
+    // 修改2：创建一个获取密钥的方法
+    private static String getSecretKey() {
+        String envSecret = System.getenv("jwt.secret");
+        return envSecret != null ? envSecret : DEFAULT_SECRET_KEY;
+    }
+
 
     public static String generateToken(String username) {
         return Jwts.builder()
                 .setSubject(username)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+                .signWith(SignatureAlgorithm.HS256, DEFAULT_SECRET_KEY.getBytes())
                 .compact();
     }
 
@@ -40,7 +47,7 @@ public  class JWT {
             }
 
             return Jwts.parserBuilder() // 使用推荐的parserBuilder()而非parser()
-                    .setSigningKey(SECRET_KEY.getBytes()) // 使用字节数组形式的密钥
+                    .setSigningKey(DEFAULT_SECRET_KEY.getBytes()) // 使用字节数组形式的密钥
                     .build()
                     .parseClaimsJws(token)
                     .getBody();

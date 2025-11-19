@@ -16,6 +16,7 @@ public class JwtInterceptor implements HandlerInterceptor
 {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception{
+
         String token = request.getHeader("Authorization");
         if(token == null || token.isEmpty()){
             response.getWriter().write(Result.error(401, "未授权").toString());
@@ -46,16 +47,24 @@ public class JwtInterceptor implements HandlerInterceptor
             }
             if(expiration!=null&&expiration.before(new Date())){
                 // token 已过期
-                response.setStatus(404);
+                response.setStatus(401); // 修改为401状态码
                 response.setContentType("application/json;charset=utf-8");
-                response.getWriter().write("{\"code\":404,\"message\":\"令牌已过期\"}");
+                response.getWriter().write(Result.error(402, "令牌已过期").toString()); // 使用Result对象
+                System.out.println("token is expired");
                 return false;
             }
             request.setAttribute("userInfo", claims);
             return true;
         }catch(Exception e){
-            response.getWriter().write(Result.error(401, "未授权")
-                    .toString());
+            // 检查异常消息是否与过期相关
+            String errorMessage = e.getMessage();
+            if (errorMessage != null && (errorMessage.contains("expired") || errorMessage.contains("过期"))) {
+                response.setStatus(401);
+                response.setContentType("application/json;charset=utf-8");
+                response.getWriter().write(Result.error(401, "令牌已过期").toString());
+            } else {
+                response.getWriter().write(Result.error(401, "未授权").toString());
+            }
             System.out.println(e.getMessage());
             return false;
         }

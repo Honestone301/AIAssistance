@@ -16,9 +16,21 @@ import org.springframework.util.DigestUtils;
 public class UserServiceImpl extends ServiceImpl<UserMapper,Users> implements UserService {
     @Override
     public Result Register(RegisterDTO registerDTO) {
+        // 首先进行参数验证
+        if (registerDTO.getPassword() == null || registerDTO.getPassword().trim().isEmpty()) {
+            return Result.error(400, MessageConstant.PASSWORD + MessageConstant.NOT_NULL);
+        }
+        if (registerDTO.getUsername() == null || registerDTO.getUsername().trim().isEmpty()) {
+            return Result.error(400, MessageConstant.USERNAME + MessageConstant.NOT_NULL);
+        }
+        if (registerDTO.getEmail() == null || registerDTO.getEmail().trim().isEmpty()) {
+            return Result.error(400, MessageConstant.EMAIL + MessageConstant.NOT_NULL);
+        }
+
         String password=registerDTO.getPassword();
         password= DigestUtils.md5DigestAsHex(password.getBytes());
         String username=registerDTO.getUsername();
+        System.out.println(username);
         String email=registerDTO.getEmail();
         Users user=this.lambdaQuery()
                 .eq(Users::getUsername, username)
@@ -36,11 +48,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,Users> implements Us
         }else{
             return Result.error(400, MessageConstant.USER+MessageConstant.REGISTER+MessageConstant.FAILED);
         }
-
     }
 
     @Override
     public Result login(LoginDTO loginDTO) {
+
+        // 首先进行参数验证
+        if (loginDTO.getPassword() == null || loginDTO.getPassword().trim().isEmpty()) {
+            return Result.error(400, MessageConstant.PASSWORD + MessageConstant.NOT_NULL);
+        }
+        if (loginDTO.getUsername() == null || loginDTO.getUsername().trim().isEmpty()) {
+            return Result.error(400, MessageConstant.USERNAME + MessageConstant.NOT_NULL);
+        }
+
         String passwordMD5=DigestUtils.md5DigestAsHex(loginDTO.getPassword().getBytes());
         Users user=this.lambdaQuery()
                 .eq(Users::getUsername, loginDTO.getUsername())
@@ -53,6 +73,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,Users> implements Us
         }
         String token= JWT.generateToken(loginDTO.getUsername());
 
-        return Result.success(MessageConstant.USER+MessageConstant.LOGIN+MessageConstant.SUCCESS);
+        return Result.success(MessageConstant.USER+MessageConstant.LOGIN+MessageConstant.SUCCESS,token);
     }
 }
